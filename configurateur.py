@@ -62,17 +62,35 @@ if choix_configurateur == "Vélo complet" :
     choix_Pneus = st.radio("Choisis tes pneux montés avec des chambre à air TPU",df_Pneus['Nom'].tolist())
     poids_Pneus, prix_Pneus = extraction_poids_prix (df_Pneus,choix_Pneus)
 
-    st.write (df_Roues_completes[['Nom','Poids','Prix']])
-    choix_Roues_completes = st.radio("Choisis tes roues",df_Roues_completes['Nom'].tolist())
-    poids_Roues_completes, prix_Roues_completes = extraction_poids_prix (df_Roues_completes,choix_Roues_completes)
+    choix_configurateur_roue = st.segmented_control("Quel type de roue veux tu ?'",["Roues complètes","Roues à la carte"])
+    if choix_configurateur_roue == "Roues complètes":
+        st.write (df_Roues_completes[['Nom','Poids','Prix']])
+        choix_Roues_completes = st.radio("Choisis tes roues",df_Roues_completes['Nom'].tolist())
+        poids_Roues, prix_Roues = extraction_poids_prix (df_Roues_completes,choix_Roues_completes)
+    elif choix_configurateur_roue == "Roues à la carte":
+        choix_jantes = st.radio("Choisis tes jantes",df_Jantes['Nom'].tolist())
+        poids_jantes, prix_jantes = extraction_poids_prix (df_Jantes,choix_jantes)
+        st.write (df_Jantes[['Nom','Poids','Prix']])  
+    
+        choix_rayons = st.radio("Choisis tes rayons",df_Rayons['Nom'].tolist())
+        poids_rayons, prix_rayons = extraction_poids_prix (df_Rayons,choix_rayons)
+        st.write (df_Rayons[['Nom','Poids','Prix']])
+    
+        choix_moyeux = st.radio("Choisis tes moyeux",df_Moyeu['Nom'].tolist())
+        poids_moyeux, prix_moyeux = extraction_poids_prix (df_Moyeu,choix_moyeux)
+        st.write (df_Moyeu[['Nom','Poids','Prix']])
 
+        poids_Roues = poids_moyeux + poids_rayons + poids_jantes
+        prix_Roues = prix_moyeux + prix_rayons + prix_jantes
+        st.write(f'Le poids des roues est {poids_Roues}g pour un prix de {prix_Roues}€')
+    
     st.write (df_Selle[['Nom','Poids','Prix']])
     choix_Selle = st.radio("Choisis ta selle",df_Selle['Nom'].tolist())
     poids_Selle, prix_Selle = extraction_poids_prix (df_Selle,choix_Selle)
 
-    poids_total_velo = poids_cadre + poids_Mini_groupe + poids_Pedalier + poids_Cassette + poids_Boitier_pedalier + poids_Chaines + poids_Disques + poids_Pneus + poids_Roues_completes + poids_Selle + 400
-    prix_total_velo = prix_cadre + prix_Mini_groupe + prix_Pedalier + prix_Cassette + prix_Boitier_pedalier + prix_Chaines + prix_Disques + prix_Pneus + prix_Roues_completes + prix_Selle + 100
-    st.write(f'Le poids du vélo est {round(poids_total_velo/1000,2)}kg pour un prix de {prix_total_velo}€')
+    poids_total_velo = poids_cadre + poids_Mini_groupe + poids_Pedalier + poids_Cassette + poids_Boitier_pedalier + poids_Chaines + poids_Disques + poids_Pneus + poids_Roues + poids_Selle + 400
+    prix_total_velo = prix_cadre + prix_Mini_groupe + prix_Pedalier + prix_Cassette + prix_Boitier_pedalier + prix_Chaines + prix_Disques + prix_Pneus + prix_Roues + prix_Selle + 100
+    st.write(f'Le poids du vélo est {round(poids_total_velo/1000,2)}kg pour un prix de {round(prix_total_velo,2)}€')
 
 elif choix_configurateur == "Roues à la carte" :
     
@@ -92,5 +110,4 @@ elif choix_configurateur == "Roues à la carte" :
 
     poids_total_roues = poids_moyeux + poids_rayons + poids_jantes
     prix_total_roues = prix_moyeux + prix_rayons + prix_jantes
-    st.write(poids_total_roues)
     st.write(f'Le poids des roues est {poids_total_roues}g pour un prix de {prix_total_roues}€')
